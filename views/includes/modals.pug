@@ -1,0 +1,47 @@
+// SIGNIN-MODAL
+#signinModal.modal.fade
+  .modal-dialog
+    .modal-content.bg-dark.text-light
+      .modal-header
+        h5.modal-title Sign In
+        button.close.text-light(data-dismiss='modal')
+          span &times;
+      .modal-body
+        form(action='/user/signin' method="POST")
+          input(type="hidden" name="_csrf", value=csrfToken)
+          .form-group
+            label(for='email') Email
+            input.form-control.bg-dark.text-white(type='email' name="email")
+          .form-group
+            label(for='password') Password
+            input.form-control.bg-dark.text-white(type='password' name="password")
+          input.btn.btn-secondary.btn-block(type='Submit' value="Submit")
+      p.d-block.mx-auto
+        | Not registered? 
+        a(href='#' data-dismiss='modal' data-toggle='modal' data-target='#signupModal') Sign Up Now
+// SIGNUP-MODAL
+#signupModal.modal.fade
+  .modal-dialog
+    .modal-content.bg-dark.text-light
+      .modal-header
+        h5.modal-title Sign Up
+        button.close.text-light(data-dismiss='modal')
+          span &times;
+      .modal-body
+        form(action='/user/signup' method="POST")
+          input(type="hidden" name="_csrf", value=csrfToken)
+          .form-group
+            label(for='name') Name
+            input.form-control.bg-dark.text-white(type='text' name="name")
+          .form-group
+            label(for='email') Email
+            input.form-control.bg-dark.text-white(type='email' name="email")
+            small.form-text Your email will never be shared by us.
+          .form-group
+            label(for='password') Password
+            input.form-control.bg-dark.text-white(type='password' name="password")
+            small.form-text Select a strong password with at least 6 characters.
+          .form-group
+            label(for='password') Confirm Password
+            input.form-control.bg-dark.text-white(type='password')
+          input.btn.btn-secondary.btn-block(type='Submit' value="Submit")

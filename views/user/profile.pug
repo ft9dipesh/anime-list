@@ -1,0 +1,242 @@
+- const watchingAnime = []
+- const completeAnime = []
+- const holdAnime = []
+- const droppedAnime = []
+- const planAnime = [] 
+- user.animeList.map(anime => {
+-   if(anime.userStatus === 'Watching') {
+-     watchingAnime.push(anime);
+-   } else if(anime.userStatus === 'Completed') {
+-     completeAnime.push(anime);
+-   } else if(anime.userStatus === 'On Hold') {
+-     holdAnime.push(anime);
+-   } else if(anime.userStatus === 'Dropped') {
+-     droppedAnime.push(anime);
+-   } else {
+-     planAnime.push(anime);
+-   }     
+- }); 
+
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  meta(http-equiv='X-UA-Compatible' content='ie=edge')
+  link(rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T' crossorigin='anonymous')
+  link(rel='stylesheet' href='/css/style.css')
+  title Anime List
+body
+  include ../includes/navbar
+  //- USER PROFILE SECTION
+  section#user-profile.bg-dark.py-2
+    .container
+      .row.justify-content-between
+        .col-md-4
+          img.img-fluid.border.border-secondary.rounded(src='/images/image1.jpg' alt='Image')
+          a.btn.btn-block.btn-secondary.mt-2(href='#') Change Avatar
+        .col-md-8.text-white
+          h1.mb-4= user.name
+            if login
+              a.ml-4.btn.btn-danger(href="/user/logout") LogOut
+          .row.p-3.justify-content-between
+            .col-md-5
+              h4 Anime Statistics
+              p.lead
+                strong Total Anime  
+                a.badge.badge-info.px-3(href="#anime-list") 
+                  | A
+                |   : 
+                =user.animeList.length
+                p
+                  strong Watching 
+                  a.badge.badge-primary.px-3(href="#watching")
+                    | W
+                  |  :
+                  =watchingAnime.length 
+                p
+                  strong Completed 
+                  a.badge.badge-success.px-3(href="#completed")
+                    | C
+                  |  : 
+                  =completeAnime.length
+                p
+                  strong Plan To Watch 
+                  a.badge.badge-secondary.px-3(href="#plan-to-watch")
+                    | P
+                  |  : 
+                  =planAnime.length
+                p
+                  strong On Hold 
+                  a.badge.badge-warning.px-3(href="#on-hold")
+                    | H
+                  |  : 
+                  =holdAnime.length
+                p
+                  strong Dropped 
+                  a.badge.badge-danger.px-3(href="#dropped")
+                    | D
+                  |  : 
+                  =droppedAnime.length
+              a.btn.btn-outline-info.btn-block(href="#") 
+                i.fas.fa-plus
+                |   Add New Anime
+
+            .col-md-6
+              h4 Recently Updated Anime
+              a.media.text-light.btn.btn-outline-secondary.p-0.text-left.my-0(href="#")
+                img.mr-3.align-self-center.border.border-secondary(src='/images/image2.jpg' height='70' width='55')
+                .media-body.text-white.pt-1
+                  h6
+                    | Boku no Hero Academia
+                    br
+                    small
+                      strong Your Rating: 
+                      | 7
+
+  //- ANIME LIST SECTION
+  section#user-profile.py-2
+    .container
+      .row
+        .col
+          .card.bg-dark.my-2
+            .card-header.text-light
+              h4#anime-list Anime List
+            table.table.table-striped.table-dark
+              //- WATCHING 
+              thead#watching.bg-primary.text-white
+                tr.text-center
+                  th.w-10 #
+                  th.w-50.text-left Title
+                  th.w-20 Episodes
+                  th.w-10 Rating
+                  th.w-10 Watching
+              tbody.text-center
+                each anime, index in watchingAnime
+                  tr
+                    td=(index+1)
+                    td.text-left 
+                      a.text-white.font-weight-bold(href="/anime/" + anime.kitsuId)=anime.title
+                    td  
+                      a.badge.badge-primary(href="#")
+                        i.fas.fa-plus
+                      |  #{anime.watchedEpisodes} / #{anime.totalEpisodes}
+                    td= anime.rating
+                    td.px-0 
+                      a(href="#").btn.mr-1.btn-sm.btn-success
+                        | C
+                      a(href="#").btn.mr-1.btn-sm.btn-warning
+                        | H
+                      a(href="#").btn.mr-1.btn-sm.btn-danger
+                        | D
+              
+              //- COMPLETED 
+              thead#completed.bg-success.text-white
+                tr.text-center
+                  th.w-10 #
+                  th.w-50.text-left Title
+                  th.w-20 Status
+                  th.w-10 Rating
+                  th.w-10 Plan To Watch
+              tbody.text-center
+                each anime, index in completeAnime
+                  tr
+                    td=(index+1)
+                    td.text-left 
+                      a.text-white.font-weight-bold(href="/anime/" + anime.kitsuId)=anime.title
+                    td  
+                      span.badge.badge-success(href="#")
+                        i.fas.fa-check-circle
+                      |  #{anime.watchedEpisodes}
+                    td= anime.rating
+                    td.px-0 
+                      a(href="#").btn.mr-1.btn-sm.btn-primary
+                        | W
+                      a(href="#").btn.mr-1.btn-sm.btn-warning
+                        | H
+                      a(href="#").btn.mr-1.btn-sm.btn-danger
+                        | D
+
+              //- ON HOLD 
+              thead#on-hold.bg-warning.text-white
+                tr.text-center
+                  th.w-10 #
+                  th.w-50.text-left Title
+                  th.w-20 Status
+                  th.w-10 Rating
+                  th.w-10 On Hold
+              tbody.text-center
+                each anime, index in holdAnime
+                  tr
+                    td=(index+1)
+                    td.text-left 
+                      a.text-white.font-weight-bold(href="/anime/" + anime.kitsuId)=anime.title
+                    td  
+                      span.badge.badge-warning(href="#")
+                        i.fas.fa-pause
+                      |  #{anime.watchedEpisodes} / #{anime.totalEpisodes}
+                    td= anime.rating
+                    td.px-0 
+                      a(href="#").btn.mr-1.btn-sm.btn-primary
+                        | W
+                      a(href="#").btn.mr-1.btn-sm.btn-success
+                        | C
+                      a(href="#").btn.mr-1.btn-sm.btn-danger
+                        | D
+
+              //- DROPPED 
+              thead#dropped.bg-danger.text-white
+                tr.text-center
+                  th.w-10 #
+                  th.w-50.text-left Title
+                  th.w-20 Status
+                  th.w-10 Rating
+                  th.w-10 Dropped
+              tbody.text-center
+                each anime, index in droppedAnime
+                  tr
+                    td=(index+1)
+                    td.text-left 
+                      a.text-white.font-weight-bold(href="/anime/" + anime.kitsuId)=anime.title
+                    td  
+                      span.badge.badge-danger(href="#")
+                        i.fas.fa-stop
+                      |  #{anime.watchedEpisodes}
+                    td= anime.rating
+                    td.px-0 
+                      a(href="#").btn.mr-1.btn-sm.btn-primary
+                        | W
+                      a(href="#").btn.mr-1.btn-sm.btn-success
+                        | C
+                      a(href="#").btn.mr-1.btn-sm.btn-warning
+                        | H
+
+              //- PLAN TO WATCH 
+              thead#plan-to-watch.bg-secondary.text-white
+                tr.text-center
+                  th.w-10 #
+                  th.w-50.text-left Title
+                  th.w-20 Status
+                  th.w-10 Rating
+                  th.w-10 Plan To Watch
+              tbody.text-center
+                each anime, index in planAnime
+                  tr
+                    td=(index+1)
+                    td.text-left 
+                      a.text-white.font-weight-bold(href="/anime/" + anime.kitsuId)=anime.title
+                    td  
+                      span.badge.badge-secondary(href="#")
+                        i.fas.fa-paper-plane
+                      |  -
+                    td= anime.rating
+                    td.px-0 
+                      a(href="#").btn.mx-1.btn-sm.btn-primary
+                        | W
+                      a(href="#").btn.mx-1.btn-sm.btn-success
+                        | C
+
+  include ../includes/footer
+  include ../includes/scripts
+
+              
+  

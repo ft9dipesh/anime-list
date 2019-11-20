@@ -1,0 +1,95 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  meta(http-equiv='X-UA-Compatible' content='ie=edge')
+  link(rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T' crossorigin='anonymous')
+  link(rel='stylesheet' href='/css/style.css')
+  title Anime List
+body
+  include ./includes/navbar
+  // ANIME SECTION
+  section#anime-section.mt-2.bg-dark.py-2
+    .container
+      .row.justify-content-between.align-items-center
+        .col-md-7.text-white
+          h2.display-4.text-center.mb-4= anime.data.attributes.canonicalTitle
+          .row.justify-content-between
+            .col-md-8
+              h6 Alternative Titles
+              p.small.p-0.mb-1= anime.data.attributes.titles.en
+              p.small.p-0.mb-1= anime.data.attributes.titles.en_jp
+              p.small.p-0.mb-1= anime.data.attributes.titles.ja_jp
+            .col-md-3
+              p.pb-0.mb-0.text-center
+                strong Rating
+              p.h1.bg-dark.border.rounded.text-right.mt-1.mx-3.px-2.mb-0
+                =parseFloat(anime.data.attributes.averageRating / 10).toFixed(2)
+              p.text-center.my-0
+                small Users:  
+                  = anime.data.attributes.userCount
+          .row.mt-3.justify-content-between
+            .col-md-6
+              h5 Synopsis
+            .col-md-6.text-right.pr-4
+              .badge.bg-secondary.py-2.px-3.mx-1
+                span= anime.data.attributes.ageRating
+              span= anime.data.attributes.ageRatingGuide
+          p.mb-3= anime.data.attributes.synopsis
+          .row.mt-5
+            .col-md-6
+              p
+                strong No. of Episodes: 
+                = anime.data.attributes.episodeCount
+              p
+                strong Episode Length: 
+                = anime.data.attributes.episodeLength
+                |  mins.
+            .col-md-6.text-right.pr-4
+              .badge.bg-info.py-2.px-3.mx-1.mb-2
+                span= anime.data.attributes.showType
+              p
+                strong Status: 
+                = (anime.data.attributes.status.charAt(0).toUpperCase() + anime.data.attributes.status.slice(1))
+        .col-md-4.text-center
+          img.img-fluid.border.border-secondary.rounded(src=anime.data.attributes.posterImage.original alt='Image')
+          if login
+            a.btn.btn-block.btn-secondary.mt-2(href='#' data-toggle="modal" data-target="#addAnimeModal") Add To My List
+          else
+            a.btn.btn-block.btn-secondary.mt-2(href='#' data-toggle="modal" data-target="#signinModal") Add To My List
+  include ./includes/footer
+  include ./includes/modals
+  //- ADD ANIME MODAL
+  #addAnimeModal.modal.fade
+    .modal-dialog
+      .modal-content.bg-dark.text-light
+        .modal-header
+          h5.modal-title Add Anime To List
+          button.close.text-light(data-dismiss='modal')
+            span &times;
+        .modal-body
+          form(action='/anime/add' method="POST")
+            input(type="hidden" name="_csrf", value=csrfToken)
+            .form-group
+              label(for='title') Title
+              input.form-control.bg-dark.text-white(type='text' name="title" value=anime.data.attributes.canonicalTitle)
+            .form-group
+              label(for='userStatus') Status
+              select.form-control(name="userStatus")
+                option(value="Watching") Watching
+                option(value="Completed") Completed
+                option(value="On Hold") On Hold
+                option(value="Dropped") Dropped
+                option(value="Plan To Watch") Plan To Watch
+            .form-group
+              label(for='watchedEpisodes') No. of Episodes Watched
+              input.form-control.bg-dark.text-white(type='number' name="watchedEpisodes")
+            .form-group
+              label(for='rating') Rating
+              input.form-control.bg-dark.text-white(type='number' name="rating" min=1 max=10)
+            input(type='hidden' name="totalEpisodes" value=anime.data.attributes.episodeCount)
+            input(type='hidden' name="kitsuId" value=anime.data.id)
+            input.btn.btn-secondary.btn-block(type='Submit' value="Submit")
+
+  include ./includes/scripts
+  script.

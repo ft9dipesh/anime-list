@@ -1,0 +1,144 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  meta(http-equiv='X-UA-Compatible' content='ie=edge')
+  link(rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T' crossorigin='anonymous')
+  link(rel='stylesheet' href='/css/style.css')
+  title Anime List
+body
+  include ./includes/navbar
+  // SHOWCASE SECTION
+  section#showcase
+    .container
+      .row
+        .col-md-8.bg-dark.py-3
+          .col-md-12.well
+            #myCarousel.carousel.slide(data-ride='carousel')
+              ol.carousel-indicators
+                each anime, index in topNewAnime.data
+                  if index==0
+                    li.active(data-target='#myCarousel' data-slide-to=index)
+                  else
+                    li(data-target='#myCarousel' data-slide-to=index)
+              .carousel-inner
+                each anime, index in topNewAnime.data
+                  if index == 0 
+                    div(class="carousel-item active carousel-image-" + (index+1) style="background: linear-gradient(to bottom,rgba(0, 0, 0, 0),rgba(49, 49, 59, 0.8)),url('"+anime.attributes.posterImage.original+"'); background-size: cover; background-position-y: center;")
+                      .carousel-caption.d-none.d-sm-block.mb-2.text-left
+                        a.text-light(href="/anime/" + anime.id)
+                          h2.h3= anime.attributes.canonicalTitle
+                        small.anime-synopsis.text-light= anime.attributes.synopsis
+                  else
+                    div(class="carousel-item carousel-image-" + (index+1) style="background: linear-gradient(to bottom,rgba(0, 0, 0, 0),rgba(49, 49, 59, 0.8)),url('"+anime.attributes.posterImage.original+"'); background-size: cover; background-position-y: center;")
+                      .carousel-caption.d-none.d-sm-block.mb-2.text-left
+                        a.text-light(href="/anime/" + anime.id)
+                          h2.h3= anime.attributes.canonicalTitle
+                        small.anime-synopsis.text-light= anime.attributes.synopsis
+
+              a.carousel-control-prev(href='#myCarousel' data-slide='prev')
+                span.carousel-control-prev-icon
+              a.carousel-control-next(href='#myCarousel' data-slide='next')
+                span.carousel-control-next-icon
+        //- TOP AIRING ANIME
+        .col-md-4.ml-auto
+          .col-md-12.well.bg-dark
+            .row
+              .col
+                h5.text-white.my-2 Top Airing Anime
+                  each anime in topNewAnime.data.slice(0,4)
+                    a.media.text-light.btn.btn-outline-secondary.p-0.text-left.my-0(href="/anime/" + anime.id)
+                      img.mr-3.align-self-center.border.border-secondary(src=anime.attributes.posterImage.original height='70' width='55')
+                      .media-body.text-white.pt-1
+                        h6
+                          = anime.attributes.canonicalTitle
+                          br
+                          small
+                            strong Rating: 
+                            = parseFloat(anime.attributes.averageRating/10).toFixed(2)
+                          small.float-right.pr-3
+                            strong Users: 
+                            = anime.attributes.userCount
+                a.btn.btn-outline-secondary.btn-block.mb-3(href='#')
+                  | More
+  // LATEST ANIME SECTION
+  - const n=Math.round(Math.random() * 4)
+  section#latest-anime.mt-3
+    .container
+      .row
+        .col-md-8.bg-dark
+          .col-md-12.well
+            h3.text-white.my-2 Latest Airing Anime
+            .card-group.bg-dark.text-white.my-1
+              each anime in topNewAnime.data.slice(n,n+3)
+                a.card.px-1.bg-dark.text-white(href="/anime/"+anime.id)
+                  .content
+                    .content-overlay
+                    img.card-img-top(src=anime.attributes.posterImage.original alt='Card image cap' height='340')
+                    .content-details.fadeIn-top
+                      h3= anime.attributes.canonicalTitle
+            .card-group.bg-dark.text-white.my-1
+              each anime in topNewAnime.data.slice(n+4,n+7)
+                a.card.px-1.bg-dark.text-white(href="/anime/"+anime.id)
+                  .content
+                    .content-overlay
+                    img.card-img-top(src=anime.attributes.posterImage.original alt='Card image cap' height='340')
+                    .content-details.fadeIn-top
+                      h3= anime.attributes.canonicalTitle
+            .card-group.bg-dark.text-white.my-1
+              each anime in topNewAnime.data.slice(n+8, n+11)
+                a.card.px-1.bg-dark.text-white(href="/anime/"+anime.id)
+                  .content
+                    .content-overlay
+                    img.card-img-top(src=anime.attributes.posterImage.original alt='Card image cap' height='340')
+                    .content-details.fadeIn-top
+                      h3= anime.attributes.canonicalTitle
+        .col-md-4.ml-auto
+          .col-md-12.well.bg-dark
+            .row.align-items-center
+              a.btn.btn-lg.btn-outline-secondary.btn-block.text-white.mt-3(href='/user/profile#anime-list')
+                i.fas.fa-user
+                |  My Anime List
+            .row.top-buffer
+              .col
+                h5.text-white.my-2 Top Rated Anime
+                  each anime in topAnime.data.slice(0,5)
+                    a.media.text-light.btn.btn-outline-secondary.p-0.text-left.my-0(href="/anime/" + anime.id)
+                      img.mr-3.align-self-center.border.border-secondary(src=anime.attributes.posterImage.original height='70' width='55')
+                      .media-body.text-white.pt-1
+                        h6
+                          = anime.attributes.canonicalTitle
+                          br
+                          small
+                            strong Rating: 
+                            = parseFloat(anime.attributes.averageRating / 10).toFixed(2) 
+                a.btn.btn-outline-secondary.btn-block.mb-2(href='#')
+                  | More
+            .row.mt-2.top-buffer
+              .col
+                h5.text-white.my-2 Most Popular Anime
+                each anime in popularAnime.data.slice(0,5)
+                  a.media.text-light.btn.btn-outline-secondary.p-0.text-left.my-0(href="/anime/" + anime.id)
+                    img.mr-3.align-self-center.border.border-secondary(src=anime.attributes.posterImage.original height='70' width='55')
+                    .media-body.text-white.pt-1
+                      h6
+                        = anime.attributes.canonicalTitle
+                        br
+                        small
+                          strong User Count: 
+                          = anime.attributes.userCount
+                a.btn.btn-outline-secondary.btn-block.mt-2.mb-3(href='#')
+                  | More
+  include ./includes/footer
+  include ./includes/modals
+  include ./includes/scripts
+  script.
+    $(function(){
+      $(".anime-synopsis").each(function(i){
+        len=$(this).text().length;
+        if(len>80)
+        {
+          $(this).text($(this).text().substr(0,160)+'...');
+        }
+      });
+    });

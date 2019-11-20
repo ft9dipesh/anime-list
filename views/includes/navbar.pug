@@ -1,0 +1,25 @@
+nav.navbar.py-2.navbar-expand-sm.navbar-dark.bg-dark.border-bottom.border-secondary.fixed-top
+  .container
+    a.navbar-brand(href='/')
+      i.fas.fa-anchor.fa-2x
+      h1.h2.d-inline AnimeList
+    button.navbar-toggler(data-toggle='collapse' data-target='#navbarNav')
+      span.navbar-toggler-icon
+    #navbarNav.collapse.navbar-collapse
+      form.form-inline.mx-auto
+        #navbarSearch.input-group
+          input.form-control.form-control-lg(type='text' placeholder='Search Anime...')
+          .input-group-append
+            button.btn.btn-outline-light
+              span.px-2
+                i.fas.fa-search
+      ul.navbar-nav.ml-auto
+        li.nav-item
+          if login
+            a.nav-link(href='/user/profile')
+              i.fas.fa-user
+              |  Profile
+          else
+            a.nav-link(href='#' data-toggle='modal' data-target='#signinModal')
+              i.fas.fa-user
+              |  Sign In
