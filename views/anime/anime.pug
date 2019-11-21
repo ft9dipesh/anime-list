@@ -7,7 +7,7 @@ head
   link(rel='stylesheet' href='/css/style.css')
   title Anime List
 body
-  include ./includes/navbar
+  include ../includes/navbar
   // ANIME SECTION
   section#anime-section.mt-2.bg-dark.py-2
     .container
@@ -57,8 +57,8 @@ body
             a.btn.btn-block.btn-secondary.mt-2(href='#' data-toggle="modal" data-target="#addAnimeModal") Add To My List
           else
             a.btn.btn-block.btn-secondary.mt-2(href='#' data-toggle="modal" data-target="#signinModal") Add To My List
-  include ./includes/footer
-  include ./includes/modals
+  include ../includes/footer
+  include ../includes/modals
   //- ADD ANIME MODAL
   #addAnimeModal.modal.fade
     .modal-dialog
@@ -89,7 +89,8 @@ body
               input.form-control.bg-dark.text-white(type='number' name="rating" min=1 max=10)
             input(type='hidden' name="totalEpisodes" value=anime.data.attributes.episodeCount)
             input(type='hidden' name="kitsuId" value=anime.data.id)
+            input(type='hidden' name="imgUrl" value=anime.data.attributes.posterImage.original)
             input.btn.btn-secondary.btn-block(type='Submit' value="Submit")
 
-  include ./includes/scripts
+  include ../includes/scripts
   script.

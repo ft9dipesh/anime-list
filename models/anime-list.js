@@ -6,6 +6,7 @@ const animeListSchema = new Schema(
   {
     kitsuId: { type: String, trim: true, required: true, unique: true },
     title: { type: String, trim: true, required: true, unique: true },
+    imgUrl: { type: String, trim: true },
     totalEpisodes: { type: Number },
     watchedEpisodes: { type: Number, default: 0 },
     rating: { type: Number, min: 1, max: 10 },

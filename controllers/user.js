@@ -7,7 +7,14 @@ const getProfile = (req, res) => {
     }
 
     user
-      .populate({ path: 'animeList' })
+      .populate({
+        path: 'animeList',
+        options: {
+          sort: {
+            updatedAt: -1
+          }
+        }
+      })
       .execPopulate()
       .then(() => {
         // console.log(user.animeList);

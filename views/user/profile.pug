@@ -83,15 +83,30 @@ body
 
             .col-md-6
               h4 Recently Updated Anime
-              a.media.text-light.btn.btn-outline-secondary.p-0.text-left.my-0(href="#")
-                img.mr-3.align-self-center.border.border-secondary(src='/images/image2.jpg' height='70' width='55')
-                .media-body.text-white.pt-1
-                  h6
-                    | Boku no Hero Academia
-                    br
-                    small
-                      strong Your Rating: 
-                      | 7
+              each anime in user.animeList.slice(0,5)
+                a.media.text-light.btn.btn-outline-secondary.p-0.text-left.my-0(href='/anime/' + anime.kitsuId)
+                  img.mr-3.align-self-center.border.border-secondary(src=anime.imgUrl height='70' width='55')
+                  .media-body.text-white.pt-1
+                    h6
+                      = anime.title
+                      br
+                      small
+                        strong Status: 
+                        if anime.userStatus === 'Watching'
+                          span.badge.badge-primary= anime.userStatus
+                        else if anime.userStatus === 'Completed'
+                          span.badge.badge-success= anime.userStatus
+                        else if anime.userStatus === 'On Hold'
+                          span.badge.badge-warning= anime.userStatus
+                        else if anime.userStatus === 'Dropped'
+                          span.badge.badge-danger= anime.userStatus
+                        else
+                          span.badge.badge-secondary= anime.userStatus
+                      small.float-right.pr-3
+                        strong Rating: #{anime.rating}
+                      br
+                      small
+                        strong Episodes: #{anime.watchedEpisodes} / #{anime.totalEpisodes}
 
   //- ANIME LIST SECTION
   section#user-profile.py-2
@@ -109,7 +124,7 @@ body
                   th.w-50.text-left Title
                   th.w-20 Episodes
                   th.w-10 Rating
-                  th.w-10 Watching
+                  th.w-10 
               tbody.text-center
                 each anime, index in watchingAnime
                   tr
@@ -121,13 +136,7 @@ body
                         i.fas.fa-plus
                       |  #{anime.watchedEpisodes} / #{anime.totalEpisodes}
                     td= anime.rating
-                    td.px-0 
-                      a(href="#").btn.mr-1.btn-sm.btn-success
-                        | C
-                      a(href="#").btn.mr-1.btn-sm.btn-warning
-                        | H
-                      a(href="#").btn.mr-1.btn-sm.btn-danger
-                        | D
+                    include ./includes/edit-buttons
               
               //- COMPLETED 
               thead#completed.bg-success.text-white
@@ -136,7 +145,7 @@ body
                   th.w-50.text-left Title
                   th.w-20 Status
                   th.w-10 Rating
-                  th.w-10 Plan To Watch
+                  th.w-10 
               tbody.text-center
                 each anime, index in completeAnime
                   tr
@@ -148,13 +157,7 @@ body
                         i.fas.fa-check-circle
                       |  #{anime.watchedEpisodes}
                     td= anime.rating
-                    td.px-0 
-                      a(href="#").btn.mr-1.btn-sm.btn-primary
-                        | W
-                      a(href="#").btn.mr-1.btn-sm.btn-warning
-                        | H
-                      a(href="#").btn.mr-1.btn-sm.btn-danger
-                        | D
+                    include ./includes/edit-buttons
 
               //- ON HOLD 
               thead#on-hold.bg-warning.text-white
@@ -163,7 +166,7 @@ body
                   th.w-50.text-left Title
                   th.w-20 Status
                   th.w-10 Rating
-                  th.w-10 On Hold
+                  th.w-10
               tbody.text-center
                 each anime, index in holdAnime
                   tr
@@ -175,13 +178,7 @@ body
                         i.fas.fa-pause
                       |  #{anime.watchedEpisodes} / #{anime.totalEpisodes}
                     td= anime.rating
-                    td.px-0 
-                      a(href="#").btn.mr-1.btn-sm.btn-primary
-                        | W
-                      a(href="#").btn.mr-1.btn-sm.btn-success
-                        | C
-                      a(href="#").btn.mr-1.btn-sm.btn-danger
-                        | D
+                    include ./includes/edit-buttons
 
               //- DROPPED 
               thead#dropped.bg-danger.text-white
@@ -190,7 +187,7 @@ body
                   th.w-50.text-left Title
                   th.w-20 Status
                   th.w-10 Rating
-                  th.w-10 Dropped
+                  th.w-10 
               tbody.text-center
                 each anime, index in droppedAnime
                   tr
@@ -202,13 +199,7 @@ body
                         i.fas.fa-stop
                       |  #{anime.watchedEpisodes}
                     td= anime.rating
-                    td.px-0 
-                      a(href="#").btn.mr-1.btn-sm.btn-primary
-                        | W
-                      a(href="#").btn.mr-1.btn-sm.btn-success
-                        | C
-                      a(href="#").btn.mr-1.btn-sm.btn-warning
-                        | H
+                    include ./includes/edit-buttons
 
               //- PLAN TO WATCH 
               thead#plan-to-watch.bg-secondary.text-white
@@ -217,7 +208,7 @@ body
                   th.w-50.text-left Title
                   th.w-20 Status
                   th.w-10 Rating
-                  th.w-10 Plan To Watch
+                  th.w-10
               tbody.text-center
                 each anime, index in planAnime
                   tr
@@ -229,11 +220,7 @@ body
                         i.fas.fa-paper-plane
                       |  -
                     td= anime.rating
-                    td.px-0 
-                      a(href="#").btn.mx-1.btn-sm.btn-primary
-                        | W
-                      a(href="#").btn.mx-1.btn-sm.btn-success
-                        | C
+                    include ./includes/edit-buttons
 
   include ../includes/footer
   include ../includes/scripts

@@ -6,13 +6,13 @@ nav.navbar.py-2.navbar-expand-sm.navbar-dark.bg-dark.border-bottom.border-second
     button.navbar-toggler(data-toggle='collapse' data-target='#navbarNav')
       span.navbar-toggler-icon
     #navbarNav.collapse.navbar-collapse
-      form.form-inline.mx-auto
-        #navbarSearch.input-group
-          input.form-control.form-control-lg(type='text' placeholder='Search Anime...')
+      form(action='/anime/search' method='POST').form-inline.mx-auto
+        input(type="hidden" name="_csrf", value=csrfToken)
+        #navbarSearch.input-group.dropdown
+          input#navbar-search-input.form-control.form-control-lg(type='text' name='searchQuery' placeholder='Search Anime...' autocomplete="off" data-toggle="dropdown")
+          #search-results.dropdown-menu
           .input-group-append
-            button.btn.btn-outline-light
-              span.px-2
-                i.fas.fa-search
+            input(type="Submit" value="Search").btn.btn-outline-light
       ul.navbar-nav.ml-auto
         li.nav-item
           if login

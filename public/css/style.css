@@ -7,8 +7,33 @@ body {
   opacity: 0.7;
   font-size: 1.2rem;
 }
-.navbar #navbarSearch {
+#navbar-search-input {
   width: 550px;
+}
+#search-input {
+  width: 550px;
+}
+
+div#search-results {
+  width: 100%;
+  height: fit-content;
+}
+
+.search-item {
+  overflow: hidden;
+  position: relative;
+  line-height: 30px;
+  padding: 5px;
+}
+.search-item span {
+  height: 80px;
+  position: absolute;
+  white-space: nowrap;
+  transform: translateX(0);
+  transition: 12s;
+}
+.search-item:hover span {
+  transform: translateX(calc(200px - 100%));
 }
 
 .carousel-item {

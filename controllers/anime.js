@@ -5,15 +5,12 @@ const getAnime = require('../utils/getAnime');
 
 const getAnimeSingle = (req, res) => {
   getAnime(
-    {
-      single: true,
-      id: req.params.id
-    },
+    `https://kitsu.io/api/edge/anime/${req.params.id}`,
     (error, anime) => {
       if (error) {
         return res.send(error.message);
       }
-      res.render('anime', { anime, csrfToken: req.csrfToken() });
+      res.render('anime/anime', { anime, csrfToken: req.csrfToken() });
     }
   );
 };
@@ -21,35 +18,34 @@ const getAnimeSingle = (req, res) => {
 const getAnimeMultiple = (req, res) => {
   // CALLBACK HELL - DONT DO THIS
   getAnime(
-    {
-      current: true,
-      sortByPopularity: true,
-      sortByRating: true,
-      filter: true,
-      filterCriteria: 'status',
-      filterValue: 'current'
-    },
+    `https://kitsu.io/api/edge/anime?sort=-userCount&sort=-averageRating&filter[status]=current&page[limit]=16`,
     (error, topNewAnime) => {
       if (error) {
         return res.send(error.message);
       }
-      getAnime({ sortByRating: true }, (error, topAnime) => {
-        if (error) {
-          return res.send(error.message);
-        }
-        getAnime({ sortByPopularity: true }, (error, popularAnime) => {
+      getAnime(
+        `https://kitsu.io/api/edge/anime?sort=-averageRating&page[limit]=5`,
+        (error, topAnime) => {
           if (error) {
             return res.send(error.message);
           }
-          res.render('index', {
-            topNewAnime,
-            topAnime,
-            popularAnime,
-            csrfToken: req.csrfToken()
-          });
-          // console.log(topNewAnime);
-        });
-      });
+          getAnime(
+            `https://kitsu.io/api/edge/anime?sort=-userCount&page[limit]=5`,
+            (error, popularAnime) => {
+              if (error) {
+                return res.send(error.message);
+              }
+              res.render('index', {
+                topNewAnime,
+                topAnime,
+                popularAnime,
+                csrfToken: req.csrfToken()
+              });
+              // console.log(topNewAnime);
+            }
+          );
+        }
+      );
     }
   );
 };
@@ -69,8 +65,32 @@ const addAnimeToList = (req, res) => {
   });
 };
 
+const searchAnime = (req, res) => {
+  let urlAppend = '';
+  if (req.params.criteria) {
+    if (req.params.criteria === 'current') {
+      urlAppend = `sort=-userCount&sort=-averageRating&filter[status]=current`;
+    } else {
+      urlAppend = `sort=-${req.params.criteria}`;
+    }
+    searchAppend = '';
+  } else {
+    searchAppend = `&filter[text]=${req.body.searchQuery}`;
+  }
+  getAnime(
+    `https://kitsu.io/api/edge/anime?${urlAppend}&page[limit]=16${searchAppend}`,
+    (error, searchResults) => {
+      if (error) {
+        return res.send(error.message);
+      }
+      res.render('anime/search', { searchResults, csrfToken: req.csrfToken() });
+    }
+  );
+};
+
 module.exports = {
   getAnimeSingle,
   getAnimeMultiple,
-  addAnimeToList
+  addAnimeToList,
+  searchAnime
 };

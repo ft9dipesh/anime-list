@@ -59,7 +59,7 @@ body
                           small.float-right.pr-3
                             strong Users: 
                             = anime.attributes.userCount
-                a.btn.btn-outline-secondary.btn-block.mb-3(href='#')
+                a.btn.btn-outline-secondary.btn-block.mb-3(href='/anime/search/current')
                   | More
   // LATEST ANIME SECTION
   - const n=Math.round(Math.random() * 4)
@@ -117,7 +117,7 @@ body
                           small
                             strong Rating: 
                             = parseFloat(anime.attributes.averageRating / 10).toFixed(2) 
-                a.btn.btn-outline-secondary.btn-block.mb-2(href='#')
+                a.btn.btn-outline-secondary.btn-block.mb-2(href='/anime/search/averageRating')
                   | More
             .row.mt-2.top-buffer
               .col
@@ -132,7 +132,7 @@ body
                         small
                           strong User Count: 
                           = anime.attributes.userCount
-                a.btn.btn-outline-secondary.btn-block.mt-2.mb-3(href='#')
+                a.btn.btn-outline-secondary.btn-block.mt-2.mb-3(href='/anime/search/userCount')
                   | More
   include ./includes/footer
   include ./includes/modals
