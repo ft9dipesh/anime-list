@@ -96,9 +96,14 @@ body
         .col-md-4.ml-auto
           .col-md-12.well.bg-dark
             .row.align-items-center
-              a.btn.btn-lg.btn-outline-secondary.btn-block.text-white.mt-3(href='/user/profile#anime-list')
-                i.fas.fa-user
-                |  My Anime List
+              if login
+                a.btn.btn-lg.btn-outline-secondary.btn-block.text-white.mt-3(href='/user/profile#anime-list')
+                  i.fas.fa-user
+                  |  My Anime List
+              else
+                a.btn.btn-lg.btn-outline-secondary.btn-block.text-white.mt-3(href="#" data-toggle="modal" data-target="#signinModal")
+                  i.fas.fa-user
+                  |  My Anime List
             .row.top-buffer
               .col
                 h5.text-white.my-2 Top Rated Anime
