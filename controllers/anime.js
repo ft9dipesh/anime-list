@@ -63,12 +63,12 @@ const getAnimeMultiple = (req, res) => {
 const addAnimeToList = (req, res) => {
   User.findById(req.session.passport.user, (error, user) => {
     if (error) {
-      return res.redirect(`/anime/${req.body.kitsuId}`);
+      return res.send(error);
     }
     const newAnime = new AnimeList({ ...req.body, owner: user._id });
     newAnime.save((error, result) => {
       if (error) {
-        return res.redirect(`/anime/${req.body.kitsuId}`);
+        return res.send(error);
       }
       res.redirect(`/user/profile`);
     });

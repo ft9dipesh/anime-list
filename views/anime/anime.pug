@@ -65,18 +65,19 @@ body
             input(type="hidden" name="_csrf", value=csrfToken)
             .form-group
               label(for='title') Title
-              input.form-control.bg-dark.text-white(type='text' name="title" disabled value=anime.data.attributes.canonicalTitle)
+              input.form-control.bg-dark.text-white(type='text' name="title" readonly="readonly" value=anime.data.attributes.canonicalTitle)
             .form-group
               label(for='userStatus') Status
-              select.form-control.bg-dark.text-white(name="userStatus")
-                option(value="Watching") Watching
-                option(value="Completed") Completed
-                option(value="On Hold") On Hold
-                option(value="Dropped") Dropped
-                option(value="Plan To Watch") Plan To Watch
+              select#status.form-control.bg-dark.text-white(name="userStatus")
+                option#watching(value="Watching") Watching
+                option#complete(value="Completed") Completed
+                option#hold(value="On Hold") On Hold
+                option#dropped(value="Dropped") Dropped
+                option#plan(value="Plan To Watch") Plan To Watch
             .form-group
               label(for='rating') Rating
               select.form-control.bg-dark.text-white(name="rating")
+                option(selected value="")
                 option(value="1") 1 - Appaling
                 option(value="2") 2 - Horrible
                 option(value="3") 3 - Very Bad
@@ -89,13 +90,16 @@ body
                 option(value="10") 10 - MasterPiece
             .form-group
               | No. of Episodes Watched:
-              input#episode-number.d-inline.form-control.bg-dark.text-white(type='number' name="watchedEpisodes")
-              if anime.data.attributes.episodeCount !== ''
+              if anime.data.attributes.episodeCount
+                input#episode-number.d-inline.form-control.bg-dark.text-white(type='number' name="watchedEpisodes" max=anime.data.attributes.episodeCount)
                 | / #{anime.data.attributes.episodeCount}
-            input(type='hidden' name="totalEpisodes" value=anime.data.attributes.episodeCount)
+              else
+                input#episode-number.d-inline.form-control.bg-dark.text-white(type='number' name="watchedEpisodes")
+            input#total-episodes(type='hidden' name="totalEpisodes" value=anime.data.attributes.episodeCount)
+            input#anime-status(type='hidden' value=anime.data.attributes.status)
             input(type='hidden' name="kitsuId" value=anime.data.id)
             input(type='hidden' name="imgUrl" value=anime.data.attributes.posterImage.original)
             input.btn.btn-secondary.btn-block(type='Submit' value="Submit")
 
   include ../includes/scripts
-  script.
+  script(src="/js/add-anime-form.js")
