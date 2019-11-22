@@ -17,14 +17,40 @@
 -   }     
 - }); 
 
-doctype html
-head
-  meta(charset='UTF-8')
-  meta(name='viewport' content='width=device-width, initial-scale=1.0')
-  meta(http-equiv='X-UA-Compatible' content='ie=edge')
-  link(rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T' crossorigin='anonymous')
-  link(rel='stylesheet' href='/css/style.css')
-  title Anime List
+mixin showStat(name, code, color, value)
+  p
+    strong= name
+    a(href="#watching" class="badge badge-" + color +" px-3")= code
+    |  : #{value}
+
+mixin tableContent(idValue, colorValue, icon, animeData)
+  thead(id=`${idValue}` class=`bg-${colorValue} text-white`)
+    tr.text-center
+      th.w-10 #
+      th.w-50.text-left Title
+      th.w-20 Episodes
+      th.w-10 Rating
+      th.w-10 
+  tbody.text-center
+    each anime, index in animeData
+      tr
+        td=(index+1)
+        td.text-left 
+          a.text-white.font-weight-bold(href="/anime/" + anime.kitsuId)=anime.title
+        td  
+          a(class=`badge badge-${colorValue}`)
+            i(class=`fas fa-${icon}`)
+          |  #{anime.watchedEpisodes} / #{anime.totalEpisodes}
+        td= anime.rating
+        include ./includes/edit-buttons
+
+mixin episodeData()
+  td  
+    a.badge.badge-primary(href="#")
+      i.fas.fa-plus
+    |  #{anime.watchedEpisodes} / #{anime.totalEpisodes}
+
+include ../includes/head
 body
   include ../includes/navbar
   //- USER PROFILE SECTION
@@ -47,36 +73,12 @@ body
                   | A
                 |   : 
                 =user.animeList.length
-                p
-                  strong Watching 
-                  a.badge.badge-primary.px-3(href="#watching")
-                    | W
-                  |  :
-                  =watchingAnime.length 
-                p
-                  strong Completed 
-                  a.badge.badge-success.px-3(href="#completed")
-                    | C
-                  |  : 
-                  =completeAnime.length
-                p
-                  strong Plan To Watch 
-                  a.badge.badge-secondary.px-3(href="#plan-to-watch")
-                    | P
-                  |  : 
-                  =planAnime.length
-                p
-                  strong On Hold 
-                  a.badge.badge-warning.px-3(href="#on-hold")
-                    | H
-                  |  : 
-                  =holdAnime.length
-                p
-                  strong Dropped 
-                  a.badge.badge-danger.px-3(href="#dropped")
-                    | D
-                  |  : 
-                  =droppedAnime.length
+                +showStat('Watching', 'W', 'primary', watchingAnime.length)
+                +showStat('Completed', 'C', 'success', completeAnime.length)
+                +showStat('Plan To Watch', 'P', 'secondary', planAnime.length)
+                +showStat('On Hold', 'H', 'warning', holdAnime.length)
+                +showStat('Dropped', 'D', 'danger', droppedAnime.length)
+
               a.btn.btn-outline-info.btn-block(href="#") 
                 i.fas.fa-plus
                 |   Add New Anime
@@ -118,109 +120,11 @@ body
               h4#anime-list Anime List
             table.table.table-striped.table-dark
               //- WATCHING 
-              thead#watching.bg-primary.text-white
-                tr.text-center
-                  th.w-10 #
-                  th.w-50.text-left Title
-                  th.w-20 Episodes
-                  th.w-10 Rating
-                  th.w-10 
-              tbody.text-center
-                each anime, index in watchingAnime
-                  tr
-                    td=(index+1)
-                    td.text-left 
-                      a.text-white.font-weight-bold(href="/anime/" + anime.kitsuId)=anime.title
-                    td  
-                      a.badge.badge-primary(href="#")
-                        i.fas.fa-plus
-                      |  #{anime.watchedEpisodes} / #{anime.totalEpisodes}
-                    td= anime.rating
-                    include ./includes/edit-buttons
-              
-              //- COMPLETED 
-              thead#completed.bg-success.text-white
-                tr.text-center
-                  th.w-10 #
-                  th.w-50.text-left Title
-                  th.w-20 Status
-                  th.w-10 Rating
-                  th.w-10 
-              tbody.text-center
-                each anime, index in completeAnime
-                  tr
-                    td=(index+1)
-                    td.text-left 
-                      a.text-white.font-weight-bold(href="/anime/" + anime.kitsuId)=anime.title
-                    td  
-                      span.badge.badge-success(href="#")
-                        i.fas.fa-check-circle
-                      |  #{anime.watchedEpisodes}
-                    td= anime.rating
-                    include ./includes/edit-buttons
-
-              //- ON HOLD 
-              thead#on-hold.bg-warning.text-white
-                tr.text-center
-                  th.w-10 #
-                  th.w-50.text-left Title
-                  th.w-20 Status
-                  th.w-10 Rating
-                  th.w-10
-              tbody.text-center
-                each anime, index in holdAnime
-                  tr
-                    td=(index+1)
-                    td.text-left 
-                      a.text-white.font-weight-bold(href="/anime/" + anime.kitsuId)=anime.title
-                    td  
-                      span.badge.badge-warning(href="#")
-                        i.fas.fa-pause
-                      |  #{anime.watchedEpisodes} / #{anime.totalEpisodes}
-                    td= anime.rating
-                    include ./includes/edit-buttons
-
-              //- DROPPED 
-              thead#dropped.bg-danger.text-white
-                tr.text-center
-                  th.w-10 #
-                  th.w-50.text-left Title
-                  th.w-20 Status
-                  th.w-10 Rating
-                  th.w-10 
-              tbody.text-center
-                each anime, index in droppedAnime
-                  tr
-                    td=(index+1)
-                    td.text-left 
-                      a.text-white.font-weight-bold(href="/anime/" + anime.kitsuId)=anime.title
-                    td  
-                      span.badge.badge-danger(href="#")
-                        i.fas.fa-stop
-                      |  #{anime.watchedEpisodes}
-                    td= anime.rating
-                    include ./includes/edit-buttons
-
-              //- PLAN TO WATCH 
-              thead#plan-to-watch.bg-secondary.text-white
-                tr.text-center
-                  th.w-10 #
-                  th.w-50.text-left Title
-                  th.w-20 Status
-                  th.w-10 Rating
-                  th.w-10
-              tbody.text-center
-                each anime, index in planAnime
-                  tr
-                    td=(index+1)
-                    td.text-left 
-                      a.text-white.font-weight-bold(href="/anime/" + anime.kitsuId)=anime.title
-                    td  
-                      span.badge.badge-secondary(href="#")
-                        i.fas.fa-paper-plane
-                      |  -
-                    td= anime.rating
-                    include ./includes/edit-buttons
+              +tableContent('#watching', 'primary', 'minus-circle', watchingAnime)
+              +tableContent('#completed', 'success', 'check-circle', completeAnime)
+              +tableContent('#on-hold', 'warning', 'pause', holdAnime)
+              +tableContent('#dropped', 'danger', 'stop', droppedAnime)
+              +tableContent('#plan-to-watch', 'secondary', 'paper-plane', planAnime)
 
   include ../includes/footer
   include ../includes/scripts

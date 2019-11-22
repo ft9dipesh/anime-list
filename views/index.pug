@@ -1,11 +1,29 @@
-doctype html
-head
-  meta(charset='UTF-8')
-  meta(name='viewport' content='width=device-width, initial-scale=1.0')
-  meta(http-equiv='X-UA-Compatible' content='ie=edge')
-  link(rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T' crossorigin='anonymous')
-  link(rel='stylesheet' href='/css/style.css')
-  title Anime List
+mixin showCarousel(status, index, animeData)
+  if status==='active'
+    div(class="carousel-item active carousel-image-" + (index+1) style="background: linear-gradient(to bottom,rgba(0, 0, 0, 0),rgba(49, 49, 59, 0.8)),url('"+animeData.attributes.posterImage.original+"'); background-size: cover; background-position-y: center;")
+      +showCarouselData(animeData)
+  else
+    div(class="carousel-item carousel-image-" + (index+1) style="background: linear-gradient(to bottom,rgba(0, 0, 0, 0),rgba(49, 49, 59, 0.8)),url('"+animeData.attributes.posterImage.original+"'); background-size: cover; background-position-y: center;")
+      +showCarouselData(animeData)
+
+mixin showCarouselData(animeData)
+  .carousel-caption.d-none.d-sm-block.mb-2.text-left
+    a.text-light(href="/anime/" + animeData.id)
+      h2.h3= animeData.attributes.canonicalTitle
+    small.anime-synopsis.text-light= animeData.attributes.synopsis
+
+mixin showLatestAnime(animeData)
+  .card-group.bg-dark.text-white.my-1
+    each anime in animeData
+      a.card.px-1.bg-dark.text-white(href="/anime/"+anime.id)
+        .content
+          .content-overlay
+          img.card-img-top(src=anime.attributes.posterImage.original alt='Card image cap' height='340')
+          .content-details.fadeIn-top
+            h3= anime.attributes.canonicalTitle
+
+
+include ./includes/head
 body
   include ./includes/navbar
   // SHOWCASE SECTION
@@ -24,18 +42,9 @@ body
               .carousel-inner
                 each anime, index in topNewAnime.data
                   if index == 0 
-                    div(class="carousel-item active carousel-image-" + (index+1) style="background: linear-gradient(to bottom,rgba(0, 0, 0, 0),rgba(49, 49, 59, 0.8)),url('"+anime.attributes.posterImage.original+"'); background-size: cover; background-position-y: center;")
-                      .carousel-caption.d-none.d-sm-block.mb-2.text-left
-                        a.text-light(href="/anime/" + anime.id)
-                          h2.h3= anime.attributes.canonicalTitle
-                        small.anime-synopsis.text-light= anime.attributes.synopsis
+                    +showCarousel('active', index, anime)
                   else
-                    div(class="carousel-item carousel-image-" + (index+1) style="background: linear-gradient(to bottom,rgba(0, 0, 0, 0),rgba(49, 49, 59, 0.8)),url('"+anime.attributes.posterImage.original+"'); background-size: cover; background-position-y: center;")
-                      .carousel-caption.d-none.d-sm-block.mb-2.text-left
-                        a.text-light(href="/anime/" + anime.id)
-                          h2.h3= anime.attributes.canonicalTitle
-                        small.anime-synopsis.text-light= anime.attributes.synopsis
-
+                    +showCarousel(null, index, anime)
               a.carousel-control-prev(href='#myCarousel' data-slide='prev')
                 span.carousel-control-prev-icon
               a.carousel-control-next(href='#myCarousel' data-slide='next')
@@ -69,30 +78,9 @@ body
         .col-md-8.bg-dark
           .col-md-12.well
             h3.text-white.my-2 Latest Airing Anime
-            .card-group.bg-dark.text-white.my-1
-              each anime in topNewAnime.data.slice(n,n+3)
-                a.card.px-1.bg-dark.text-white(href="/anime/"+anime.id)
-                  .content
-                    .content-overlay
-                    img.card-img-top(src=anime.attributes.posterImage.original alt='Card image cap' height='340')
-                    .content-details.fadeIn-top
-                      h3= anime.attributes.canonicalTitle
-            .card-group.bg-dark.text-white.my-1
-              each anime in topNewAnime.data.slice(n+4,n+7)
-                a.card.px-1.bg-dark.text-white(href="/anime/"+anime.id)
-                  .content
-                    .content-overlay
-                    img.card-img-top(src=anime.attributes.posterImage.original alt='Card image cap' height='340')
-                    .content-details.fadeIn-top
-                      h3= anime.attributes.canonicalTitle
-            .card-group.bg-dark.text-white.my-1
-              each anime in topNewAnime.data.slice(n+8, n+11)
-                a.card.px-1.bg-dark.text-white(href="/anime/"+anime.id)
-                  .content
-                    .content-overlay
-                    img.card-img-top(src=anime.attributes.posterImage.original alt='Card image cap' height='340')
-                    .content-details.fadeIn-top
-                      h3= anime.attributes.canonicalTitle
+            +showLatestAnime(topNewAnime.data.slice(n,n+3))
+            +showLatestAnime(topNewAnime.data.slice(n+3,n+6))
+            +showLatestAnime(topNewAnime.data.slice(n+6,n+9))
         .col-md-4.ml-auto
           .col-md-12.well.bg-dark
             .row.align-items-center

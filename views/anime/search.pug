@@ -1,11 +1,14 @@
-doctype html
-head
-  meta(charset='UTF-8')
-  meta(name='viewport' content='width=device-width, initial-scale=1.0')
-  meta(http-equiv='X-UA-Compatible' content='ie=edge')
-  link(rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T' crossorigin='anonymous')
-  link(rel='stylesheet' href='/css/style.css')
-  title Anime List
+mixin showAnime(searchResultData)
+  .col
+    .card-group.bg-dark.text-white.my-1
+      each anime in searchResultData
+        a.card.px-1.bg-dark.text-white(href="/anime/"+anime.id)
+          img.card-img-top(src=anime.attributes.posterImage.original alt='Card image cap' height='340')
+          .card-body.text-center
+            p.h4= anime.attributes.canonicalTitle
+            small Rating: #{parseFloat(anime.attributes.averageRating/10).toFixed(2)}
+
+include ../includes/head
 body
   nav.navbar.py-2.navbar-expand-sm.navbar-dark.bg-dark.border-bottom.border-secondary.fixed-top
     .container
@@ -36,41 +39,13 @@ body
             input#search-input.form-control.form-control-lg(type='text' name='searchQuery' placeholder='Search')
             input(type="Submit" value="Search").btn.btn-outline-light.btn-lg
       .row.mt-3
-        .col
-          .card-group.bg-dark.text-white.my-1
-            each anime in searchResults.data.slice(0,4)
-              a.card.px-1.bg-dark.text-white(href="/anime/"+anime.id)
-                img.card-img-top(src=anime.attributes.posterImage.original alt='Card image cap' height='340')
-                .card-body.text-center
-                  p.h4= anime.attributes.canonicalTitle
-                  small Rating: #{parseFloat(anime.attributes.averageRating/10).toFixed(2)}
+        +showAnime(searchResults.data.slice(0,4))
       .row
-        .col
-          .card-group.bg-dark.text-white.my-1
-            each anime in searchResults.data.slice(4,8)
-              a.card.px-1.bg-dark.text-white(href="/anime/"+anime.id)
-                img.card-img-top(src=anime.attributes.posterImage.original alt='Card image cap' height='340')
-                .card-body.text-center
-                  p.h4= anime.attributes.canonicalTitle
-                  small Rating: #{parseFloat(anime.attributes.averageRating/10).toFixed(2)}
+        +showAnime(searchResults.data.slice(4,8))
       .row
-        .col
-          .card-group.bg-dark.text-white.my-1
-            each anime in searchResults.data.slice(8,12)
-              a.card.px-1.bg-dark.text-white(href="/anime/"+anime.id)
-                img.card-img-top(src=anime.attributes.posterImage.original alt='Card image cap' height='340')
-                .card-body.text-center
-                  p.h4= anime.attributes.canonicalTitle
-                  small Rating: #{parseFloat(anime.attributes.averageRating/10).toFixed(2)}
+        +showAnime(searchResults.data.slice(8,12))
       .row
-        .col
-          .card-group.bg-dark.text-white.my-1
-            each anime in searchResults.data.slice(12,16)
-              a.card.px-1.bg-dark.text-white(href="/anime/"+anime.id)
-                img.card-img-top(src=anime.attributes.posterImage.original alt='Card image cap' height='340')
-                .card-body.text-center
-                  p.h4= anime.attributes.canonicalTitle
-                  small Rating: #{parseFloat(anime.attributes.averageRating/10).toFixed(2)}
+        +showAnime(searchResults.data.slice(12,16))
         
 
   include ../includes/footer

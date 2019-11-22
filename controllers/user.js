@@ -18,7 +18,10 @@ const getProfile = (req, res) => {
       .execPopulate()
       .then(() => {
         // console.log(user.animeList);
-        res.render('user/profile', { user });
+        res.render('user/profile', {
+          user,
+          pageTitle: `${user.name} - AnimeList`
+        });
       });
   });
 };

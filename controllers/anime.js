@@ -10,7 +10,11 @@ const getAnimeSingle = (req, res) => {
       if (error) {
         return res.send(error.message);
       }
-      res.render('anime/anime', { anime, csrfToken: req.csrfToken() });
+      res.render('anime/anime', {
+        anime,
+        csrfToken: req.csrfToken(),
+        pageTitle: `${anime.data.attributes.canonicalTitle} - AnimeList`
+      });
     }
   );
 };
@@ -39,7 +43,8 @@ const getAnimeMultiple = (req, res) => {
                 topNewAnime,
                 topAnime,
                 popularAnime,
-                csrfToken: req.csrfToken()
+                csrfToken: req.csrfToken(),
+                pageTitle: `AnimeList - Track Your Anime`
               });
               // console.log(topNewAnime);
             }
@@ -83,7 +88,11 @@ const searchAnime = (req, res) => {
       if (error) {
         return res.send(error.message);
       }
-      res.render('anime/search', { searchResults, csrfToken: req.csrfToken() });
+      res.render('anime/search', {
+        searchResults,
+        csrfToken: req.csrfToken(),
+        pageTitle: `Search - AnimeList`
+      });
     }
   );
 };
