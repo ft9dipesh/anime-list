@@ -44,6 +44,8 @@ router.post(
     check('password').custom((value, { req }) => {
       if (value !== req.body.confirmPassword) {
         throw new Error('Password confirmation is incorrect');
+      } else {
+        return true;
       }
     })
   ],
