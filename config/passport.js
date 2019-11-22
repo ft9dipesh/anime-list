@@ -1,5 +1,6 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const { validationResult } = require('express-validator');
 
 const User = require('../models/user');
 
@@ -23,12 +24,20 @@ passport.use(
       passReqToCallback: true
     },
     (req, email, password, done) => {
+      const errors = validationResult(req);
+      // console.log(errors);
+      if (!errors.isEmpty()) {
+        let messages = [];
+        errors.array().forEach(error => messages.push(error.msg));
+        return done(null, false, req.flash('error', messages));
+      }
+
       User.findOne({ email: email }, (error, user) => {
         if (error) {
           return done(error);
         }
         if (user) {
-          return done(null, false);
+          return done(null, false, { message: 'Email already in use!' });
         }
         const newUser = new User({
           email,
@@ -51,18 +60,26 @@ passport.use(
   new LocalStrategy(
     {
       usernameField: 'email',
-      passwordField: 'password'
+      passwordField: 'password',
+      passReqToCallback: true
     },
-    (email, password, done) => {
+    (req, email, password, done) => {
+      const errors = validationResult(req);
+      // console.log(errors);
+      if (!errors.isEmpty()) {
+        let messages = [];
+        errors.array().forEach(error => messages.push(error.msg));
+        return done(null, false, req.flash('error', messages));
+      }
       User.findOne({ email }, (error, user) => {
         if (error) {
           return done(error);
         }
         if (!user) {
-          return done(null, false);
+          return done(null, false, { message: 'Email not found' });
         }
         if (!user.validPassword(password)) {
-          return done(null, false);
+          return done(null, false, { message: 'Incorrect password' });
         }
         return done(null, user);
       });

@@ -28,6 +28,16 @@ const getProfile = (req, res) => {
   });
 };
 
+const getSignUp = (req, res) => {
+  const messages = req.flash('error');
+  // console.log(messages);
+  res.render('user/signup', {
+    csrfToken: req.csrfToken(),
+    messages,
+    hasErrors: messages.length > 0
+  });
+};
+
 const postSignUp = (req, res) => {
   if (req.session.oldUrl) {
     const oldUrl = req.session.oldUrl;
@@ -69,6 +79,7 @@ const postAvatar = (req, res) => {
 
 module.exports = {
   getProfile,
+  getSignUp,
   postSignUp,
   postSignIn,
   postAvatar

@@ -65,21 +65,33 @@ body
             input(type="hidden" name="_csrf", value=csrfToken)
             .form-group
               label(for='title') Title
-              input.form-control.bg-dark.text-white(type='text' name="title" value=anime.data.attributes.canonicalTitle)
+              input.form-control.bg-dark.text-white(type='text' name="title" disabled value=anime.data.attributes.canonicalTitle)
             .form-group
               label(for='userStatus') Status
-              select.form-control(name="userStatus")
+              select.form-control.bg-dark.text-white(name="userStatus")
                 option(value="Watching") Watching
                 option(value="Completed") Completed
                 option(value="On Hold") On Hold
                 option(value="Dropped") Dropped
                 option(value="Plan To Watch") Plan To Watch
             .form-group
-              label(for='watchedEpisodes') No. of Episodes Watched
-              input.form-control.bg-dark.text-white(type='number' name="watchedEpisodes")
-            .form-group
               label(for='rating') Rating
-              input.form-control.bg-dark.text-white(type='number' name="rating" min=1 max=10)
+              select.form-control.bg-dark.text-white(name="rating")
+                option(value="1") 1 - Appaling
+                option(value="2") 2 - Horrible
+                option(value="3") 3 - Very Bad
+                option(value="4") 4 - Bad
+                option(value="5") 5 - Average
+                option(value="6") 6 - Fine
+                option(value="7") 7 - Good
+                option(value="8") 8 - Very Good
+                option(value="9") 9 - Great
+                option(value="10") 10 - MasterPiece
+            .form-group
+              | No. of Episodes Watched:
+              input#episode-number.d-inline.form-control.bg-dark.text-white(type='number' name="watchedEpisodes")
+              if anime.data.attributes.episodeCount !== ''
+                | / #{anime.data.attributes.episodeCount}
             input(type='hidden' name="totalEpisodes" value=anime.data.attributes.episodeCount)
             input(type='hidden' name="kitsuId" value=anime.data.id)
             input(type='hidden' name="imgUrl" value=anime.data.attributes.posterImage.original)

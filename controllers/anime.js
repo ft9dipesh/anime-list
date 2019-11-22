@@ -4,6 +4,7 @@ const AnimeList = require('../models/anime-list');
 const getAnime = require('../utils/getAnime');
 
 const getAnimeSingle = (req, res) => {
+  req.session.oldUrl = req.originalUrl;
   getAnime(
     `https://kitsu.io/api/edge/anime/${req.params.id}`,
     (error, anime) => {
@@ -21,6 +22,8 @@ const getAnimeSingle = (req, res) => {
 
 const getAnimeMultiple = (req, res) => {
   // CALLBACK HELL - DONT DO THIS
+  req.session.oldUrl = null;
+  const messages = req.flash('error');
   getAnime(
     `https://kitsu.io/api/edge/anime?sort=-userCount&sort=-averageRating&filter[status]=current&page[limit]=16`,
     (error, topNewAnime) => {
@@ -44,7 +47,9 @@ const getAnimeMultiple = (req, res) => {
                 topAnime,
                 popularAnime,
                 csrfToken: req.csrfToken(),
-                pageTitle: `AnimeList - Track Your Anime`
+                pageTitle: `AnimeList - Track Your Anime`,
+                messages,
+                hasErrors: messages.length > 0
               });
               // console.log(topNewAnime);
             }

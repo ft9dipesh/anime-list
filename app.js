@@ -3,6 +3,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const session = require('express-session');
+const flash = require('connect-flash');
 
 const mainRouter = require('./routes/index');
 const userRouter = require('./routes/user');
@@ -34,6 +35,7 @@ app.use(
     }
   })
 );
+app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 

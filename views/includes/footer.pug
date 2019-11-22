@@ -1,12 +1,18 @@
 footer#main-footer.mt-3
   .container
-    .row
+    .row.justify-content-center
       .col-lg-4.col-md-6
         h3 Site Map
         ul.list-unstyled
-          li Home
-          li Search
-          li Anime List
+          li 
+            a(href="/") Home
+          li 
+            a(href="/search/userCount") Search
+          li 
+            if login
+              a(href="/user/profile#anime-list") Anime List
+            else
+              a(href="#" data-toggle="modal" data-target="#signinModal") Anime List
         ul.list-unstyled.socila-list
           li
             i.fab.fa-facebook.fa-3x
@@ -18,13 +24,6 @@ footer#main-footer.mt-3
             i.fab.fa-github.fa-3x
           li
             i.fab.fa-youtube.fa-3x
-      .col-lg-4.col-md-6
-      .col-lg-4
-        h3 Our Work
-        img.img-thumbnail(src='http://placehold.it/150x100' alt='')
-        img.img-thumbnail(src='http://placehold.it/150x100' alt='')
-        img.img-thumbnail(src='http://placehold.it/150x100' alt='')
-        img.img-thumbnail(src='http://placehold.it/150x100' alt='')
   .copyright.text-center
     | Copyright &copy; 2019 
     span AnimeList

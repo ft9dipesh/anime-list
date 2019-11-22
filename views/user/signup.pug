@@ -1,0 +1,34 @@
+include ../includes/head
+body
+  include ../includes/navbar
+  .container
+    .row.justify-content-center
+      .col-md-8
+        .card.px-1.bg-dark.text-white
+          .card-header
+            h5 Sign Up Now
+          .card-body
+            form(action='/user/signup' method="POST")
+              if hasErrors
+                each message in messages
+                  .alert.alert-danger
+                    p=message
+              input(type="hidden" name="_csrf", value=csrfToken)
+              .form-group
+                label(for='name') Name
+                input.form-control.bg-dark.text-white(type='text' name="name")
+              .form-group
+                label(for='email') Email
+                input.form-control.bg-dark.text-white(type='email' name="email")
+                small.form-text Your email will never be shared by us.
+              .form-group
+                label(for='password') Password
+                input.form-control.bg-dark.text-white(type='password' name="password")
+                small.form-text Select a strong password with at least 6 characters.
+              .form-group
+                label(for='password') Confirm Password
+                input.form-control.bg-dark.text-white(type='password' name="confirmPassword")
+              input.btn.btn-secondary.btn-block(type='Submit' value="Submit")
+
+  include ../includes/footer
+  include ../includes/scripts

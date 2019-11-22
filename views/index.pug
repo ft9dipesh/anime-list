@@ -125,6 +125,11 @@ body
   include ./includes/footer
   include ./includes/modals
   include ./includes/scripts
+  if hasErrors
+    script.
+      $(window).on('load', function(){
+        $('#signinModal').modal('show');
+      })
   script.
     $(function(){
       $(".anime-synopsis").each(function(i){
@@ -135,3 +140,6 @@ body
         }
       });
     });
+
+
+
