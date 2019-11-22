@@ -4,8 +4,8 @@
   "description": "Anime List Tracker",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon -e js,pug index.js"
+    "start": "node index.js",
+    "dev": "env-cmd -f ./config/dev.env nodemon -e js,pug index.js"
   },
   "author": "Dipesh Lamichhane",
   "license": "ISC",
@@ -26,6 +26,7 @@
     "sharp": "^0.23.3"
   },
   "devDependencies": {
+    "env-cmd": "^10.0.1",
     "nodemon": "^1.19.4"
   }
 }
