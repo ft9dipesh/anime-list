@@ -1,4 +1,4 @@
-const $searchInput = document.getElementById('search-input');
+const $searchInput = document.getElementById('navbar-search-input');
 const $searchResults = document.getElementById('search-results');
 
 const searchState = query => {

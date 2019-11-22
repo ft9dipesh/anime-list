@@ -20,7 +20,7 @@
 mixin showStat(name, code, color, value)
   p
     strong= name
-    a(href="#watching" class="badge badge-" + color +" px-3")= code
+    a(href="#watching" class="mx-1 badge badge-" + color +" px-3")= code
     |  : #{value}
 
 mixin tableContent(idValue, colorValue, icon, animeData)
@@ -57,10 +57,19 @@ body
   section#user-profile.bg-dark.py-2
     .container
       .row.justify-content-between
-        .col-md-4
-          img.img-fluid.border.border-secondary.rounded(src='/images/image1.jpg' alt='Image')
-          a.btn.btn-block.btn-secondary.mt-2(href='#') Change Avatar
-        .col-md-8.text-white
+        .col-md-3.text-center
+          if user.avatar
+            img.img-fluid.border.border-secondary.rounded(src="data:image/png;base64,"+user.avatar.toString('base64'))
+          else
+            img.img-fluid.border.border-secondary.rounded(src="/images/avatar-placeholder.png")
+          form#upload-form(action="/user/avatar?_csrf="+csrfToken method="post" enctype="multipart/form-data" hidden)
+            .custom-file
+              input.custom-file-input(type="file" name="avatar")
+              label.custom-file-label.bg-dark.text-left.text-white(for="myfile") Upload Image
+              small.form-text.text-light Max 5MB
+            input.btn.btn-success.btn-block(type="submit" value="Confirm")
+          button#change-avatar-button.btn.btn-block.btn-secondary.mt-2 Change Avatar
+        .col-md-9.text-white
           h1.mb-4= user.name
             if login
               a.ml-4.btn.btn-danger(href="/user/logout") LogOut
@@ -78,10 +87,6 @@ body
                 +showStat('Plan To Watch', 'P', 'secondary', planAnime.length)
                 +showStat('On Hold', 'H', 'warning', holdAnime.length)
                 +showStat('Dropped', 'D', 'danger', droppedAnime.length)
-
-              a.btn.btn-outline-info.btn-block(href="#") 
-                i.fas.fa-plus
-                |   Add New Anime
 
             .col-md-6
               h4 Recently Updated Anime
@@ -128,6 +133,7 @@ body
 
   include ../includes/footer
   include ../includes/scripts
+  script(src="/js/upload-form.js")
 
               
   

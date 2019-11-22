@@ -2,7 +2,14 @@ const express = require('express');
 const csrf = require('csurf');
 const passport = require('passport');
 
-const { getProfile, postSignIn, postSignUp } = require('../controllers/user');
+const upload = require('../config/img-upload');
+
+const {
+  getProfile,
+  postSignIn,
+  postSignUp,
+  postAvatar
+} = require('../controllers/user');
 
 const { isLoggedIn, notLoggedIn } = require('../middleware/authorization');
 
@@ -18,6 +25,8 @@ router.get('/logout', isLoggedIn, (req, res) => {
   req.logOut();
   res.redirect('/');
 });
+
+router.post('/avatar', upload.single('avatar'), isLoggedIn, postAvatar);
 
 router.use('/', notLoggedIn, (req, res, next) => {
   next();

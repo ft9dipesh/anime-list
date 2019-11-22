@@ -1,11 +1,12 @@
 const User = require('../models/user');
+const sharp = require('sharp');
 
 const getProfile = (req, res) => {
   User.findById(req.session.passport.user, (error, user) => {
     if (error) {
       return res.redirect('/');
     }
-
+    // console.log(user.avatar.toString());
     user
       .populate({
         path: 'animeList',
@@ -20,7 +21,8 @@ const getProfile = (req, res) => {
         // console.log(user.animeList);
         res.render('user/profile', {
           user,
-          pageTitle: `${user.name} - AnimeList`
+          pageTitle: `${user.name} - AnimeList`,
+          csrfToken: req.csrfToken()
         });
       });
   });
@@ -44,8 +46,30 @@ const postSignIn = (req, res) => {
   res.redirect('/user/profile');
 };
 
+const postAvatar = (req, res) => {
+  sharp(req.file.buffer)
+    .resize({ width: 250, height: 300 })
+    .png()
+    .toBuffer()
+    .then(buffer => {
+      User.findById(req.session.passport.user, (error, user) => {
+        if (error) {
+          return res.send(error.message);
+        }
+        user.avatar = buffer;
+        user.save((error, result) => {
+          if (error) {
+            return res.send(error.message);
+          }
+          res.redirect('/user/profile');
+        });
+      });
+    });
+};
+
 module.exports = {
   getProfile,
   postSignUp,
-  postSignIn
+  postSignIn,
+  postAvatar
 };
