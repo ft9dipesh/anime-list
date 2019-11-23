@@ -5,17 +5,56 @@ const getAnime = require('../utils/getAnime');
 
 const getAnimeSingle = (req, res) => {
   req.session.oldUrl = req.originalUrl;
+
   getAnime(
     `https://kitsu.io/api/edge/anime/${req.params.id}`,
     (error, anime) => {
       if (error) {
         return res.send(error.message);
       }
-      res.render('anime/anime', {
-        anime,
-        csrfToken: req.csrfToken(),
-        pageTitle: `${anime.data.attributes.canonicalTitle} - AnimeList`
-      });
+      let inList = false;
+
+      if (req.session.passport) {
+        User.findById(req.session.passport.user, (error, user) => {
+          if (error) {
+            return res.send(error.message);
+          }
+          // console.log(user.avatar.toString());
+          user
+            .populate({
+              path: 'animeList',
+              options: {
+                sort: {
+                  updatedAt: -1
+                }
+              }
+            })
+            .execPopulate()
+            .then(() => {
+              user.animeList.forEach(userAnime => {
+                if (userAnime.kitsuId === req.params.id) {
+                  inList = true;
+                }
+              });
+              res.render('anime/anime', {
+                anime,
+                inList,
+                csrfToken: req.csrfToken(),
+                pageTitle: `${anime.data.attributes.canonicalTitle} - AnimeList`
+              });
+            })
+            .catch(error => {
+              res.send('Could not populate animelist');
+            });
+        });
+      } else {
+        res.render('anime/anime', {
+          anime,
+          inList,
+          csrfToken: req.csrfToken(),
+          pageTitle: `${anime.data.attributes.canonicalTitle} - AnimeList`
+        });
+      }
     }
   );
 };
@@ -102,9 +141,41 @@ const searchAnime = (req, res) => {
   );
 };
 
+const updateAnime = (req, res) => {
+  AnimeList.findOneAndUpdate(
+    { kitsuId: req.body.kitsuId, owner: req.session.passport.user },
+    {
+      userStatus: req.body.userStatus,
+      rating: req.body.rating,
+      watchedEpisodes: req.body.watchedEpisodes
+    },
+    (error, result) => {
+      if (error) {
+        return res.send(error.message);
+      }
+      res.redirect('/user/profile');
+    }
+  );
+};
+
+const deleteAnime = (req, res) => {
+  // console.log(req.body);
+  AnimeList.findOneAndRemove(
+    { kitsuId: req.body.kitsuId, owner: req.session.passport.user },
+    (error, response) => {
+      if (error) {
+        return res.send(error.message);
+      }
+      res.redirect('/user/profile');
+    }
+  );
+};
+
 module.exports = {
   getAnimeSingle,
   getAnimeMultiple,
   addAnimeToList,
-  searchAnime
+  searchAnime,
+  updateAnime,
+  deleteAnime
 };

@@ -1,5 +1,13 @@
-td.px-0 
-  a(href="#").btn.mr-1.btn-sm.btn-info
-    i.fas.fa-pencil-alt
-  a(href="#").btn.mr-1.btn-sm.btn-danger
-    i.fas.fa-trash
+td.px-0(id=anime.kitsuId) 
+  span.edit-button(data-toggle="modal" data-target="#updateAnimeModal")
+    a.btn.mr-1.btn-sm.btn-info(data-toggle="tooltip" data-placement="top" title="Edit")
+      i.fas.fa-pencil-alt
+  span.remove-button(data-toggle="modal" data-target="#confirmRemoveModal")
+    a(data-toggle="tooltip" data-placement="top" title="Remove").btn.mr-1.btn-sm.btn-danger
+      i.fas.fa-trash
+
+
+  //- a(href="#" data-toggle="modal" data-target="#updateAnimeModal").btn.mr-1.btn-sm.btn-info.edit-button
+  //-   i.fas.fa-pencil-alt
+  //- a(href=`/anime/delete/${anime.kitsuId}`).btn.mr-1.btn-sm.btn-danger.remove-button
+  //-   i.fas.fa-trash

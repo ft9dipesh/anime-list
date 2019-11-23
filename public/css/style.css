@@ -83,6 +83,13 @@ div#search-results {
   background-position-y: center;
 }
 
+span.edit-button:hover {
+  cursor: pointer;
+}
+span.remove-button:hover {
+  cursor: pointer;
+}
+
 /* ***************************
 ******** SIDEBAR *************
 **************************** */

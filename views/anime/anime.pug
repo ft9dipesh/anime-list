@@ -47,7 +47,11 @@ body
         .col-md-4.text-center
           img.img-fluid.border.border-secondary.rounded(src=anime.data.attributes.posterImage.original alt='Image')
           if login
-            a.btn.btn-block.btn-secondary.mt-2(href='#' data-toggle="modal" data-target="#addAnimeModal") Add To My List
+            if inList
+              p.btn.btn-block.btn-outline-success.mt-2.mb-0 Anime Already In List
+              a.btn.btn-block.btn-outline-secondary(href="/user/profile#anime-list") View My List 
+            else
+              a.btn.btn-block.btn-secondary.mt-2(href='#' data-toggle="modal" data-target="#addAnimeModal") Add To My List
           else
             a.btn.btn-block.btn-secondary.mt-2(href='#' data-toggle="modal" data-target="#signinModal") Add To My List
   include ../includes/footer
@@ -68,12 +72,13 @@ body
               input.form-control.bg-dark.text-white(type='text' name="title" readonly="readonly" value=anime.data.attributes.canonicalTitle)
             .form-group
               label(for='userStatus') Status
-              select#status.form-control.bg-dark.text-white(name="userStatus")
+              select#status.form-control.bg-dark.text-white
                 option#watching(value="Watching") Watching
                 option#complete(value="Completed") Completed
                 option#hold(value="On Hold") On Hold
                 option#dropped(value="Dropped") Dropped
                 option#plan(value="Plan To Watch") Plan To Watch
+            input#status-send(name="userStatus" type="hidden")
             .form-group
               label(for='rating') Rating
               select.form-control.bg-dark.text-white(name="rating")

@@ -17,13 +17,17 @@
 -   }     
 - }); 
 
-mixin showStat(name, code, color, value)
+- const capitalize = (string) => {
+-   return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+- }
+
+mixin showStat(targetId, name, code, color, value)
   p
     strong= name
-    a(href="#watching" class="mx-1 badge badge-" + color +" px-3")= code
+    a(href=`#${targetId}` class="mx-1 badge badge-" + color +" px-3")= code
     |  : #{value}
 
-mixin tableContent(idValue, colorValue, icon, animeData)
+mixin tableContent(idValue, colorValue, icon, animeData, userStatusData)
   thead(id=`${idValue}` class=`bg-${colorValue} text-white`)
     tr.text-center
       th.w-10 #
@@ -35,12 +39,12 @@ mixin tableContent(idValue, colorValue, icon, animeData)
     each anime, index in animeData
       tr
         td=(index+1)
-        td.text-left 
+        td.text-left(data-status= capitalize(idValue.replace('-', ' ')))
           a.text-white.font-weight-bold(href="/anime/" + anime.kitsuId)=anime.title
         td  
-          a(class=`badge badge-${colorValue}`)
+          a(class=`mx-1 badge badge-${colorValue}`)
             i(class=`fas fa-${icon}`)
-          |  #{anime.watchedEpisodes} / #{anime.totalEpisodes}
+          | #{anime.watchedEpisodes}/ #{anime.totalEpisodes}
         td= anime.rating
         include ./includes/edit-buttons
 
@@ -82,11 +86,11 @@ body
                   | A
                 |   : 
                 =user.animeList.length
-                +showStat('Watching', 'W', 'primary', watchingAnime.length)
-                +showStat('Completed', 'C', 'success', completeAnime.length)
-                +showStat('Plan To Watch', 'P', 'secondary', planAnime.length)
-                +showStat('On Hold', 'H', 'warning', holdAnime.length)
-                +showStat('Dropped', 'D', 'danger', droppedAnime.length)
+                +showStat('watching' ,'Watching', 'W', 'primary', watchingAnime.length)
+                +showStat('completed', 'Completed', 'C', 'success', completeAnime.length)
+                +showStat('plan-to-watch','Plan To Watch', 'P', 'secondary', planAnime.length)
+                +showStat('on-hold','On Hold', 'H', 'warning', holdAnime.length)
+                +showStat('dropped','Dropped', 'D', 'danger', droppedAnime.length)
 
             .col-md-6
               h4 Recently Updated Anime
@@ -125,15 +129,81 @@ body
               h4#anime-list Anime List
             table.table.table-striped.table-dark
               //- WATCHING 
-              +tableContent('#watching', 'primary', 'minus-circle', watchingAnime)
-              +tableContent('#completed', 'success', 'check-circle', completeAnime)
-              +tableContent('#on-hold', 'warning', 'pause', holdAnime)
-              +tableContent('#dropped', 'danger', 'stop', droppedAnime)
-              +tableContent('#plan-to-watch', 'secondary', 'paper-plane', planAnime)
+              +tableContent('watching', 'primary', 'minus-circle', watchingAnime.sort((a,b) => (a.title > b.title) ? 1 : -1))
+              +tableContent('completed', 'success', 'check-circle', completeAnime.sort((a,b) => (a.title > b.title) ? 1 : -1))
+              +tableContent('on-hold', 'warning', 'pause', holdAnime.sort((a,b) => (a.title > b.title) ? 1 : -1))
+              +tableContent('dropped', 'danger', 'stop', droppedAnime.sort((a,b) => (a.title > b.title) ? 1 : -1))
+              +tableContent('plan-to-watch', 'secondary', 'paper-plane', planAnime.sort((a,b) => (a.title > b.title) ? 1 : -1))
+
+  //- UPDATE ANIME MODAL
+  #updateAnimeModal.modal.fade
+    .modal-dialog
+      .modal-content.bg-dark.text-light
+        .modal-header
+          h5.modal-title Update
+          button.close.text-light(data-dismiss='modal')
+            span &times;
+        .modal-body
+          form#update-form(action='/anime/update' method="POST")
+            input(type="hidden" name="_csrf", value=csrfToken)
+            .form-group
+              label(for='title') Title
+              input#anime-title.form-control.bg-dark.text-white(type='text' name="title" disabled)
+            .form-group
+              label(for='userStatus') Status
+              select#status.form-control.bg-dark.text-white()
+                option#watching(value="Watching") Watching
+                option#complete(value="Completed") Completed
+                option#hold(value="On Hold") On Hold
+                option#dropped(value="Dropped") Dropped
+                option#plan(value="Plan To Watch") Plan To Watch
+            input#status-send(name="userStatus" type="hidden")
+            .form-group
+              label(for='rating') Rating
+              select#rating-select.form-control.bg-dark.text-white(name="rating")
+                option(value="")
+                option(value="1") 1 - Appaling
+                option(value="2") 2 - Horrible
+                option(value="3") 3 - Very Bad
+                option(value="4") 4 - Bad
+                option(value="5") 5 - Average
+                option(value="6") 6 - Fine
+                option(value="7") 7 - Good
+                option(value="8") 8 - Very Good
+                option(value="9") 9 - Great
+                option(value="10") 10 - MasterPiece
+            .form-group
+              | No. of Episodes Watched:
+              input#episode-number.d-inline.form-control.bg-dark.text-white(type='number' name="watchedEpisodes")
+              small#small-total-episodes.form-text
+              //- | / #{anime.data.attributes.episodeCount}
+            //- input#total-episodes(type='hidden' name="totalEpisodes" value='')
+            //- input#anime-status(type='hidden' value='')
+            input#anime-kitsuId-update(type='hidden' name="kitsuId" value='')
+            //- input(type='hidden' name="imgUrl" value=anime.data.attributes.posterImage.original)
+            input.btn.btn-secondary.btn-block(type='Submit' value="Submit")
+
+  //- COMFIRM REMOVE MODAL
+  #confirmRemoveModal.modal.fade
+    .modal-dialog
+      .modal-content.bg-dark.text-light
+        .modal-header
+          h5.modal-title Remove This Entry From List?
+          button.close.text-light(data-dismiss='modal')
+            span &times;
+        .modal-body
+          form#confirm-remove-form(action='/anime/delete' method="POST")
+            input(type="hidden" name="_csrf" value=csrfToken)
+            input#anime-kitsuId-delete(type='hidden' name="kitsuId" value='')
+            input.form-control(type='submit' value="Confirm").btn.mr-1.btn-sm.btn-danger
 
   include ../includes/footer
   include ../includes/scripts
   script(src="/js/upload-form.js")
+  script(src="/js/update-anime.js")
+  script.
+    $('[data-toggle="tooltip"]').tooltip();
+  
 
               
   
