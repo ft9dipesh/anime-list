@@ -69,6 +69,10 @@ Array.from(document.getElementsByClassName('edit-button')).forEach(button => {
     $statusSendInput.value = $statusInput.value =
       tableRowData[1].dataset.status;
 
+    if ($statusInput.value === 'Plan To Watch') {
+      $episodeNumberInput.setAttribute('readonly', 'readonly');
+    }
+
     Array.from(document.getElementById('rating-select').children).forEach(
       option => {
         if (option.value === tableRowData[3].innerText) {

@@ -17,9 +17,9 @@
 -   }     
 - }); 
 
-- const capitalize = (string) => {
--   return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
-- }
+- const toTitleCase = (phrase) => {
+-  return phrase.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+- };
 
 mixin showStat(targetId, name, code, color, value)
   p
@@ -39,7 +39,7 @@ mixin tableContent(idValue, colorValue, icon, animeData, userStatusData)
     each anime, index in animeData
       tr
         td=(index+1)
-        td.text-left(data-status= capitalize(idValue.replace('-', ' ')))
+        td.text-left(data-status= toTitleCase(idValue.replace(/-/g, ' ')))
           a.text-white.font-weight-bold(href="/anime/" + anime.kitsuId)=anime.title
         td  
           a(class=`mx-1 badge badge-${colorValue}`)
